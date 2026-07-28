@@ -1,69 +1,103 @@
 # Happy Birthday 🏹💗🌳
 
-A birthday film in four acts, in the browser. Draw a real recurve bow, send a
-Cupid's arrow into a beating heart, and watch it burst and bloom into a **tree of
-hearts** under a hand-lettered wish.
+A birthday card that plays like a little film in your browser.
 
-No framework, no video file — it's vanilla JavaScript, one `<canvas>`, and GSAP
-for the choreography.
+You pull back a bow, shoot an arrow into a heart, and the heart bursts and grows
+into a tree made of hundreds of tiny hearts.
+
+There is no video file. It is all drawn live by the browser.
+
+### 👉 [See it live](https://hasib41.github.io/happy-birthday-tree/)
 
 ![Preview](media/preview.jpg)
 
-▶️ **[media/demo-silent.mp4](media/demo-silent.mp4)** — a short silent capture of the whole film.
+▶️ [media/demo-silent.mp4](media/demo-silent.mp4) — a short clip of the whole thing (no sound).
 
 ---
 
-## The four acts
+## Run it on your computer
 
-1. **The invitation** — a softly *beating* heart on a warm field, with a small
-   recurve bow nocked below it. Pull the string back and release.
-2. **The shot** — the string snaps (a real elastic twang), the arrow flies on a
-   diagonal and **embeds in the heart**, which bursts into a flood of rose.
-3. **The wish** — kinetic type hinges up out of that colour, glyph by glyph:
-   *HAPPY / BIRTHDAY*, under cinema bars and a slow camera push.
-4. **The tree** — a gold light blooms, and a bare tree grows and fills a
-   heart-shaped canopy with hundreds of lit blossoms, petals drifting down, the
-   Great Vibes wish writing itself on.
-
-It's built to be **interactive**: pull the bow with the mouse or a touch drag,
-or focus it and press <kbd>Enter</kbd> / <kbd>Space</kbd>.
-
-## Run it
+You need [Node.js](https://nodejs.org/) version 20 or newer. Then copy these
+commands one by one:
 
 ```bash
+git clone https://github.com/hasib41/happy-birthday-tree.git
+cd happy-birthday-tree
 npm install
-npm run dev        # open the printed localhost URL
+npm run dev
 ```
+
+The last command prints a link like `http://localhost:5173`.
+Open it in your browser. That's it.
+
+To stop it, press `Ctrl + C` in the terminal.
+
+## All the commands
+
+| Command | What it does |
+| --- | --- |
+| `npm install` | Downloads what the project needs. Run this once, at the start. |
+| `npm run dev` | Runs the site on your computer. Every file you save updates the page instantly. |
+| `npm run build` | Makes the finished version inside a `dist/` folder. |
+| `npm run preview` | Opens that finished version so you can check it before putting it online. |
+
+## How to play it
+
+- **Mouse or finger** — press on the bow, drag down to pull the string, then let go.
+- **Keyboard** — press `Tab` until the bow is selected, then press `Enter` or `Space`.
+- **Watch again** — an "Again" button shows up at the end.
+- If your computer is set to *reduce motion*, the film is skipped and you go
+  straight to the finished tree.
+
+## What happens, in order
+
+1. **The bow** — a heart beats gently and a small bow waits under it. Pull the
+   string back and let go.
+2. **The shot** — the string twangs, the arrow flies up, hits the heart, and the
+   heart bursts into a flood of rose colour.
+3. **The wish** — *Happy Birthday* rises up out of that colour one letter at a
+   time, a hand-drawn line sweeps underneath, and black film bars slide in.
+4. **The tree** — a gold light blooms, a bare tree grows and fills a
+   heart-shaped top with hundreds of lit blossoms, petals drift down, and the
+   wish writes itself on again in flowing script.
+
+## Change the words or colours
+
+| What you want to change | Open this file |
+| --- | --- |
+| The text on screen | `index.html` |
+| Colours, fonts, sizes | `birthday.css` |
+| Timing and the animation | `birthday.js` |
+
+Save the file while `npm run dev` is running and the page updates by itself.
+
+## Put it online
+
+It publishes itself to GitHub Pages. Just push your changes:
 
 ```bash
-npm run build      # production build → dist/
-npm run preview    # serve the built dist/
+git add .
+git commit -m "my changes"
+git push
 ```
 
-## How it's made
+GitHub then runs `npm run build` for you and puts the finished site online. You
+can watch it happen in the **Actions** tab.
 
-- **One GSAP master timeline** runs acts 1–3 (the draw, the shot, the flood, the
-  kinetic wish). It's rebuilt from measured geometry on every play, so the arrow
-  always lands dead-centre on the heart at any viewport size or shot angle.
-- **One `<canvas>` engine** runs act 4 (the tree). Every blossom, bokeh orb and
-  sparkle is rendered **once** to an offscreen sprite; the animation only moves
-  transforms and alpha, so hundreds of hearts stay smooth on one `rAF` loop.
-- **The bow** is a live SVG — wooden limbs, a leather grip, and a two-segment
-  string whose nock is animated as you draw. The arrow is a winged golden
-  heart-tip with rose-red feather fletching.
-- Only `transform` and `opacity` are animated on the DOM; GSAP owns every
-  transform. A grain + vignette lens sits over the whole piece.
-- **Accessible**: the bow is a real focusable control with a keyboard path, and
-  `prefers-reduced-motion` skips the film and shows the finished tree + wish.
+⚠️ One setting has to be right. In your repo go to **Settings → Pages** and set
+**Source** to **GitHub Actions** — *not* "Deploy from a branch". If you serve the
+raw files instead of the built ones, the page opens blank.
 
-## Stack
+## Built with
 
-Vanilla JS · [GSAP](https://gsap.com/) · Canvas 2D · [Vite](https://vitejs.dev/) ·
+Plain JavaScript · [GSAP](https://gsap.com/) · Canvas 2D · [Vite](https://vitejs.dev/) ·
 Google Fonts (Great Vibes, Fraunces, Cormorant Garamond)
+
+No framework. One `<canvas>` for the tree, and GSAP for everything else.
 
 ## License
 
-[MIT](LICENSE) © Hasib
+[MIT](LICENSE) © Hasib — free to use, copy and change.
 
-_The silent demo has no audio; the soundtrack in the published Short uses a
-third-party music track and is not included here._
+_The demo clip has no sound. The music in the published Short is a third-party
+track and is not included here._
