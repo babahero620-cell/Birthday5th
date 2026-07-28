@@ -248,8 +248,13 @@ function buildScene(){
 
   const wide = W / H > 1.2;
   cx = W * (wide ? 0.57 : 0.5);
-  cy = H * (wide ? 0.37 : 0.38);
-  ry = Math.min(H * (wide ? 0.33 : 0.33), W * 0.34);
+  // On a tall phone the canopy is clamped by WIDTH while the trunk still runs to
+  // the bottom of the viewport — that used to leave a 441px trunk under a 133px
+  // canopy (a lollipop on a wire). Portrait therefore gets a wider canopy set a
+  // little lower, which shortens the trunk it has to stand on. Landscape values
+  // are untouched.
+  cy = H * (wide ? 0.37 : 0.42);
+  ry = Math.min(H * 0.33, W * (wide ? 0.34 : 0.40));
   rx = ry * 1.16;
   groundY = H * 0.93;
 
@@ -285,7 +290,10 @@ function buildScene(){
 
   const baseX = cx, baseY = H * 1.0;
   const trunkTopY = cy + ry * 0.62;
-  const trunkW = Math.max(9, W * 0.024);
+  // Thickness belongs to the canopy, not the viewport: on portrait, W * 0.024 is
+  // a 9px hairline holding up a full crown. Tie it to ry so the trunk stays in
+  // proportion to what it carries at every size.
+  const trunkW = Math.max(9, wide ? W * 0.024 : ry * 0.12);
   const limbLen = ry * 0.6;
   const insidePx = (x, y, m = 0.9) => pointInPoly((x - cx) / (rx * m), (cy - y) / (ry * m));
 
