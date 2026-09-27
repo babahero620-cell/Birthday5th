@@ -796,7 +796,7 @@ function MusicScene({ music, onContinue }) {
       <div className="relative w-56 h-56 mb-8">
         <div className={`absolute inset-0 rounded-full border-4 border-dashed border-[#D9A2A6]/50 ${isPlaying ? "anim-spin-slow" : ""}`} />
         <div className="absolute inset-4 rounded-full bg-[#FFFBF6] shadow-inner flex items-center justify-center overflow-hidden">
-          <span className={`text-5xl ${isPlaying ? "anim-spin-med" : ""}`}>🌼</span>
+          <span className={`text-5xl ${isPlaying ? "anim-spin-med" : ""}`}>🌷</span>
         </div>
         <div className="absolute -bottom-6 inset-x-0 flex justify-center gap-1.5">
           {[0,1,2,3,4].map(i => (
@@ -820,7 +820,7 @@ function MusicScene({ music, onContinue }) {
           {blocked && <p className="text-[#4A3B3E]/40 text-xs text-center mb-2">Tap play — your browser needs a tap before it can play sound.</p>}
         </>
       ) : (
-        <p className="text-[#4A3B3E]/50 text-sm mb-4 text-center max-w-xs">(Add a song URL to <code>birthdayConfig.music</code> to play something here.)</p>
+        <p className="text-[#4A3B3E]/50 text-sm mb-4 text-center max-w-xs">(Stay Happy Always <code>Mere Kuchuu Puchuuu</code> 😋🫶🏻)</p>
       )}
       <button onClick={onContinue} className="mt-8 px-6 py-3 rounded-full bg-[#4B5D47] text-[#FFFBF6] font-semibold shadow-lg active:scale-95 transition-transform">Continue →</button>
     </div>
