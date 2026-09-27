@@ -1,0 +1,956 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Happy Birthday ♥ — a little film</title>
+  <meta name="description" content="A cinematic birthday film in four acts: a beating heart you open with a tap, a rush of colour, a kinetic wish, and a tree that blooms into a heart of petals." />
+  <meta name="theme-color" content="#f7e7dc" />
+  <link rel="icon" type="image/png" href="/favicon.png" />
+
+  <!-- Share card. This link gets sent to someone on a messenger, so it needs a
+       preview instead of a bare URL. og:image must be an absolute URL — relative
+       paths are not resolved by most scrapers, and Vite's base rewrite does not
+       touch meta content. Regenerate public/og.jpg if the tree ever changes. -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://hasib41.github.io/happy-birthday-tree/" />
+  <meta property="og:title" content="Happy Birthday ♥" />
+  <meta property="og:description" content="Pull back the bow, hit the heart, and watch it bloom into a tree of hearts." />
+  <meta property="og:image" content="https://hasib41.github.io/happy-birthday-tree/og.jpg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Happy Birthday ♥" />
+  <meta name="twitter:description" content="Pull back the bow, hit the heart, and watch it bloom into a tree of hearts." />
+  <meta name="twitter:image" content="https://hasib41.github.io/happy-birthday-tree/og.jpg" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Fraunces:opsz,wght@9..144,600;9..144,700;9..144,900&display=swap" rel="stylesheet" />
+
+  <script>document.documentElement.classList.add('js')</script>
+  <link rel="stylesheet" href="./birthday.css" />
+
+  <!-- ===== assets for Part 2 (the garden) ===== -->
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
+  <style>
+
+  :root{color-scheme:light;box-sizing:border-box}
+  *,*::before,*::after{box-sizing:inherit}
+  html,body,#root{height:100%;width:100%;margin:0;overflow-x:hidden}
+  body{background:#FBF3EA;font-family:'Quicksand',system-ui,sans-serif;-webkit-tap-highlight-color:transparent;
+       padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+  .font-display{font-family:'Cormorant Garamond',Georgia,serif}
+  .font-hand{font-family:'Caveat',cursive}
+  button,.no-select{-webkit-user-select:none;user-select:none}
+  button:focus-visible,[tabindex]:focus-visible{outline:2px solid #8AA383;outline-offset:3px;border-radius:8px}
+  .scene{min-height:100dvh;width:100%;overflow:hidden;position:relative}
+  ::-webkit-scrollbar{width:6px} ::-webkit-scrollbar-thumb{background:#D9A2A6;border-radius:3px}
+
+  @keyframes floatY{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+  @keyframes drift{0%{transform:translate(0,0) rotate(0deg);opacity:0}10%{opacity:1}100%{transform:translate(-40px,340px) rotate(220deg);opacity:0}}
+  @keyframes twinkle{0%,100%{opacity:.3;transform:scale(1)}50%{opacity:1;transform:scale(1.3)}}
+  @keyframes shakeX{10%,90%{transform:translateX(-2px)}20%,80%{transform:translateX(4px)}30%,50%,70%{transform:translateX(-8px)}40%,60%{transform:translateX(8px)}}
+  @keyframes popIn{0%{opacity:0;transform:scale(.6)}100%{opacity:1;transform:scale(1)}}
+  @keyframes fadeUp{0%{opacity:0;transform:translateY(24px)}100%{opacity:1;transform:translateY(0)}}
+  @keyframes fadeIn{0%{opacity:0}100%{opacity:1}}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  @keyframes riseUp{0%{transform:translateY(0);opacity:0}10%{opacity:1}100%{transform:translateY(-110vh);opacity:0}}
+  @keyframes ringPulse{0%,100%{transform:scale(1);opacity:.55}50%{transform:scale(1.4);opacity:1}}
+
+  .anim-float{animation:floatY 6s ease-in-out infinite}
+  .anim-float-slow{animation:floatY 9s ease-in-out infinite}
+  .anim-twinkle{animation:twinkle 2.5s ease-in-out infinite}
+  .anim-shake{animation:shakeX .5s ease-in-out}
+  .anim-pop{animation:popIn .5s cubic-bezier(.34,1.56,.64,1) both}
+  .anim-fadeup{animation:fadeUp .7s ease-out both}
+  .anim-fadein{animation:fadeIn .8s ease-out both}
+  .anim-spin-slow{animation:spin 12s linear infinite}
+  .anim-spin-med{animation:spin 8s linear infinite}
+
+  @media (prefers-reduced-motion: reduce){
+    *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important}
+  }
+
+  </style>
+
+  <!-- ===== bridge: continue button + part1/part2 crossfade ===== -->
+  <style>
+    #part2{ position:fixed; inset:0; }
+    .continueBtn{
+      position:absolute; left:20px; bottom:18px; z-index:7;
+      display:inline-flex; align-items:center; gap:7px;
+      padding:9px 15px; border-radius:999px;
+      font:600 12.5px/1 "Cormorant Garamond", Georgia, serif; letter-spacing:.12em; text-transform:uppercase;
+      color:#8a4a5a; background:rgba(255,248,242,.72);
+      border:1px solid rgba(150,60,80,.18);
+      box-shadow:0 6px 20px -8px rgba(120,20,50,.4);
+      backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px);
+      cursor:pointer; opacity:0; transform:translateY(8px); pointer-events:none;
+      transition:opacity .5s ease, transform .5s cubic-bezier(.2,.7,.2,1), background .3s ease;
+    }
+    .continueBtn.is-shown{ opacity:1; transform:translateY(0); pointer-events:auto; }
+    .continueBtn:hover{ background:rgba(255,252,248,.92); }
+  </style>
+</head>
+<body>
+  <main class="filmScene" id="part1">
+
+    <!-- The tree world (Act 4). One canvas; it stays transparent until the
+         intro hands off, then it draws its own warm sky + blossom tree. -->
+    <canvas id="tree" class="tree" aria-label="A blossom tree grows and blooms into a heart made of petals" role="img"></canvas>
+
+    <!-- ACT 1 — THE INVITATION ------------------------------------------------
+         A single beating heart on a warm field. It is the only thing the
+         visitor has to do: tap it. Real <button> so it is tappable + keyboard
+         focusable; everything decorative around it is aria-hidden. -->
+    <section class="hero" id="hero" aria-label="Draw the bow to open your card">
+      <div class="hero__bg" aria-hidden="true"></div>
+      <div class="hero__motes" id="motes" aria-hidden="true"></div>
+
+      <p class="hero__eyebrow" id="eyebrow">a little something, for you</p>
+
+      <!-- THE TARGET — the heart the arrow flies to (GSAP animates .target) -->
+      <div class="targetWrap" aria-hidden="true">
+        <div class="target" id="target">
+          <span class="heart__glow" aria-hidden="true"></span>
+          <span class="target__heart" id="targetHeart">
+            <svg class="heart__svg" viewBox="0 0 100 92" aria-hidden="true">
+              <defs>
+                <radialGradient id="hg" cx="38%" cy="30%" r="80%">
+                  <stop offset="0%"  stop-color="#ffd9e4" />
+                  <stop offset="42%" stop-color="#ff6f97" />
+                  <stop offset="82%" stop-color="#d81e57" />
+                  <stop offset="100%" stop-color="#9d0f3e" />
+                </radialGradient>
+                <linearGradient id="hsheen" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%"  stop-color="rgba(255,255,255,.85)" />
+                  <stop offset="34%" stop-color="rgba(255,255,255,0)" />
+                </linearGradient>
+              </defs>
+              <path d="M50 86.5C26 68 10.5 53.6 10.5 34.6 10.5 20.4 21 11 33.2 11c8.6 0 14.2 4.7 16.8 11.4C52.6 15.7 58.2 11 66.8 11 79 11 89.5 20.4 89.5 34.6 89.5 53.6 74 68 50 86.5Z" fill="url(#hg)" />
+              <path d="M50 86.5C26 68 10.5 53.6 10.5 34.6 10.5 20.4 21 11 33.2 11c8.6 0 14.2 4.7 16.8 11.4C52.6 15.7 58.2 11 66.8 11 79 11 89.5 20.4 89.5 34.6 89.5 53.6 74 68 50 86.5Z" fill="url(#hsheen)" opacity=".7" />
+              <ellipse cx="34" cy="30" rx="8.5" ry="5.4" fill="#fff" opacity=".72" style="mix-blend-mode:screen" />
+            </svg>
+          </span>
+        </div>
+      </div>
+
+      <!-- THE BOW + ARROW — draw the string back, release to fire. The rig is
+           placed lower-left and rotated by JS to aim at the heart, so the shot
+           travels on a diagonal. A real control: role=button + keyboard drag. -->
+      <div class="archery" id="archery" role="button" tabindex="0"
+           aria-label="Draw the bow and release to send the arrow to the heart">
+
+          <!-- aim line, inside the rig so it points straight at the heart -->
+          <div class="aim" id="aim" aria-hidden="true"></div>
+
+          <!-- realistic recurve bow: wooden limbs, leather grip, a live string -->
+          <svg class="bow" id="bow" viewBox="0 0 460 300" aria-hidden="true">
+            <defs>
+              <linearGradient id="limb" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0"   stop-color="#4a2a1a" />
+                <stop offset=".18" stop-color="#6b3f24" />
+                <stop offset=".5"  stop-color="#8a5127" />
+                <stop offset=".82" stop-color="#6b3f24" />
+                <stop offset="1"   stop-color="#4a2a1a" />
+              </linearGradient>
+              <linearGradient id="limbHi" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="rgba(255,214,160,.8)" />
+                <stop offset="1" stop-color="rgba(255,214,160,0)" />
+              </linearGradient>
+              <linearGradient id="grip" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0" stop-color="#2a1a10" />
+                <stop offset=".5" stop-color="#5a3822" />
+                <stop offset="1" stop-color="#2a1a10" />
+              </linearGradient>
+            </defs>
+            <!-- limb body (taper faked with two stacked strokes) -->
+            <path class="bow__limb" d="M34 96 C 118 168, 168 240, 230 252 C 292 240, 342 168, 426 96"
+                  fill="none" stroke="url(#limb)" stroke-width="13" stroke-linecap="round" />
+            <path class="bow__limbHi" d="M34 96 C 118 168, 168 240, 230 252 C 292 240, 342 168, 426 96"
+                  fill="none" stroke="url(#limbHi)" stroke-width="3" stroke-linecap="round" opacity=".7" />
+            <!-- recurve tip hooks -->
+            <path d="M34 96 C 22 82, 26 70, 40 66" fill="none" stroke="url(#limb)" stroke-width="8" stroke-linecap="round" />
+            <path d="M426 96 C 438 82, 434 70, 420 66" fill="none" stroke="url(#limb)" stroke-width="8" stroke-linecap="round" />
+            <!-- leather grip over the belly -->
+            <rect x="216" y="206" width="28" height="70" rx="9" fill="url(#grip)" />
+            <path d="M219 220h22 M219 236h22 M219 252h22" stroke="rgba(0,0,0,.35)" stroke-width="2" />
+            <!-- the string: two segments meeting at the nock (JS animates the nock).
+                 A warm taupe so the taut string actually reads against the cream. -->
+            <line class="bow__str" id="strL" x1="40" y1="70" x2="230" y2="96" stroke="#9a8068" stroke-width="2.2" stroke-linecap="round" />
+            <line class="bow__str" id="strR" x1="420" y1="70" x2="230" y2="96" stroke="#9a8068" stroke-width="2.2" stroke-linecap="round" />
+            <circle class="bow__serving" id="serving" cx="230" cy="96" r="4.5" fill="#6f5137" />
+          </svg>
+
+          <!-- the arrow: winged golden heart tip (Cupid), gold feather fletching -->
+          <svg class="arrow" id="arrow" viewBox="0 0 64 220" aria-hidden="true">
+            <defs>
+              <linearGradient id="shaft" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0" stop-color="#4a2c14" />
+                <stop offset=".5" stop-color="#8a5a2c" />
+                <stop offset="1" stop-color="#3e2410" />
+              </linearGradient>
+              <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="#ffe38c" />
+                <stop offset=".45" stop-color="#f4a626" />
+                <stop offset="1" stop-color="#a85f0e" />
+              </linearGradient>
+              <linearGradient id="feath" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="#ff7f9c" />
+                <stop offset=".5" stop-color="#e6396a" />
+                <stop offset="1" stop-color="#a8154a" />
+              </linearGradient>
+              <linearGradient id="wing" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="#ffffff" />
+                <stop offset="1" stop-color="#ffe0c4" />
+              </linearGradient>
+            </defs>
+
+            <!-- shaft (dark wood so it reads against the cream) -->
+            <rect x="29.4" y="30" width="5.2" height="168" rx="2.6" fill="url(#shaft)" />
+
+            <!-- angel wings flanking the heart tip -->
+            <g class="arrow__wings">
+              <path class="wingL" d="M31 30 C 10 16, 2 20, 4 34 C 12 30, 20 32, 31 40 Z" fill="url(#wing)" stroke="rgba(196,132,58,.72)" stroke-width="1.2"/>
+              <path class="wingR" d="M33 30 C 54 16, 62 20, 60 34 C 52 30, 44 32, 33 40 Z" fill="url(#wing)" stroke="rgba(196,132,58,.72)" stroke-width="1.2"/>
+            </g>
+
+            <!-- golden heart arrowhead (Cupid's love arrow) -->
+            <path class="arrow__head" d="M32 12 C 30 7, 22 6.5, 21.5 13 C 21 18, 27 22, 32 27 C 37 22, 43 18, 42.5 13 C 42 6.5, 34 7, 32 12 Z" fill="url(#gold)" stroke="#a5701a" stroke-width=".8" />
+            <ellipse cx="27" cy="13" rx="2.6" ry="1.7" fill="#fff" opacity=".8" style="mix-blend-mode:screen" />
+
+            <!-- gold feather fletching -->
+            <g class="arrow__fletch">
+              <path d="M32 150 C 16 156, 10 178, 15 200 C 24 194, 30 184, 32 176 Z" fill="url(#feath)" />
+              <path d="M32 150 C 48 156, 54 178, 49 200 C 40 194, 34 184, 32 176 Z" fill="url(#feath)" opacity=".92" />
+              <path d="M28 160l4 3 M26 170l6 3 M25 180l7 3" stroke="rgba(130,12,48,.45)" stroke-width="1" />
+              <path d="M36 160l-4 3 M38 170l-6 3 M39 180l-7 3" stroke="rgba(130,12,48,.45)" stroke-width="1" />
+            </g>
+            <!-- nock -->
+            <path d="M29 200 L32 205 L35 200" fill="none" stroke="#c9a25a" stroke-width="2" stroke-linecap="round"/>
+            <!-- invisible tip marker: JS measures it to land the head on the heart -->
+            <circle id="tip" cx="32" cy="9" r="0.6" fill="none" />
+          </svg>
+      </div>
+
+      <p class="hero__hint" id="hint">pull &amp; release</p>
+    </section>
+
+    <!-- ACT 2 — THE FLOOD -----------------------------------------------------
+         The heart bursts into this circle at its landing point, and it swallows
+         the frame in rose. Same trick as the intro dot: no cross-fade anywhere,
+         the colour just arrives. -->
+    <div class="flood" id="flood" aria-hidden="true"></div>
+
+    <!-- ACT 3 — THE WISH (kinetic type on the flood) --------------------------
+         Lives inside the flood's own colour, revealed by it. Every glyph hinges
+         up out of its mask — nothing fades. -->
+    <div class="field" id="field" aria-hidden="true">
+      <div class="blob blob--1"></div>
+      <div class="blob blob--2"></div>
+      <div class="blob blob--3"></div>
+      <div class="fgrid" id="fgrid"></div>
+      <div class="fvignette"></div>
+
+      <div class="camera" id="camera">
+        <p class="kEyebrow" id="kEyebrow">make a wish&hellip;</p>
+        <h2 class="headline" id="headline">
+          <span class="hl__line"><span class="mask"><span class="hl__word" id="wLine1">Happy</span></span></span>
+          <span class="hl__line"><span class="mask"><span class="hl__word" id="wLine2">Birthday</span></span></span>
+        </h2>
+        <svg class="uline" id="uline" viewBox="0 0 300 26" fill="none" aria-hidden="true">
+          <path class="uline__path" d="M8 16C56 7 132 4 178 6c30 1 78 5 114 12-40 3-108 4-176 3"
+                stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+        <p class="kSub" id="kSub">to someone worth celebrating</p>
+      </div>
+
+      <div class="bar bar--top" id="barTop"></div>
+      <div class="bar bar--bot" id="barBot"></div>
+    </div>
+
+    <!-- The gold light that bridges the rose wish into the dawn of the tree. -->
+    <div class="bloom" id="bloom" aria-hidden="true"></div>
+
+    <!-- ACT 4 — THE HAND-LETTERED WISH (over the tree) ------------------------ -->
+    <div class="wish" id="wish" aria-hidden="true">
+      <p class="wish__eyebrow" id="wEyebrow">and&hellip; make it count</p>
+      <div class="wish__heroWrap"><h1 class="wish__hero" id="wHero">Happy Birthday</h1></div>
+      <span class="wish__rule" id="wRule"></span>
+      <p class="wish__sub" id="wSub">here&rsquo;s to a year that blooms</p>
+    </div>
+
+    <!-- Move on to the personal gift once the film has settled. -->
+    <button class="continueBtn" id="continueBtn" type="button">Open your gift →</button>
+
+    <!-- Play the film again once it has settled. -->
+    <button class="replay" id="replay" type="button" hidden>
+      <svg viewBox="0 0 24 24" aria-hidden="true" width="15" height="15">
+        <path d="M12 5V2L7 6l5 4V7a5 5 0 1 1-5 5H5a7 7 0 1 0 7-7z" fill="currentColor" />
+      </svg>
+      Again
+    </button>
+
+    <!-- One lens over the whole film: vignette + fine grain. -->
+    <div class="grade" aria-hidden="true">
+      <div class="grade__vignette"></div>
+      <div class="grade__grain"></div>
+    </div>
+  </main>
+
+    <!-- ============ PART 2 : the garden (hidden until the film ends) ============ -->
+    <div id="part2" style="display:none;">
+      <div id="root"></div>
+    </div>
+
+  <!-- Accessible equivalent for reduced-motion + screen readers. -->
+  <p class="sr-only">Happy Birthday. Here&rsquo;s to a wonderful year ahead.</p>
+
+  <!-- plays the moment the bow is released (see fire() in birthday.js) -->
+  <audio id="bgAudio" src="https://files.catbox.moe/j6k4h3.mp3" preload="auto"></audio>
+
+  <script type="module" src="./birthday.js"></script>
+
+  <script type="text/babel" data-presets="react">
+
+const { useState, useEffect, useRef, useCallback, useMemo } = React;
+
+/* ============================================================
+   ALL CUSTOMIZATION LIVES HERE — edit these values only.
+   ============================================================ */
+const birthdayConfig = {
+  birthdayName: "YOUR FRIEND",
+  senderName: "YOUR NAME",
+  pin: "1010",
+  introTitle: "For you, YOUR FRIEND",
+  introSubtitle: "I made something special for you.",
+  introHint: "There's a little surprise waiting inside.",
+  personalMessage: "I hope this little garden makes you smile. I wanted to create something that feels as special as the memories we've made together.",
+  photos: [
+    { image: "", caption: "A beautiful memory" },
+    { image: "", caption: "One moment I'll always remember" },
+    { image: "", caption: "So much laughter that day" },
+    { image: "", caption: "One of my favorites" },
+    { image: "", caption: "A memory I treasure" },
+  ],
+  gardenFlowerMessages: ["You're special 🌸", "Keep exploring...", "There's more..."],
+  flowerMessages: [
+    "You make ordinary moments special.",
+    "Never forget how amazing you are.",
+    "Keep smiling.",
+    "More beautiful memories are waiting.",
+  ],
+  letterMessage:
+    "You mean so much to me, and I wanted today to feel as warm and bright as the joy you bring into every room you walk into. I hope this little letter finds you smiling.\n\nHere's to another year of your wonderful, wonderful self.",
+  music: "", // e.g. "https://example.com/song.mp3" — leave empty to hide the music screen controls
+  finalMessage: "May your birthday be filled with happiness, beautiful moments, and unforgettable memories.",
+};
+
+function seededRandom(seed){ const x = Math.sin(seed) * 10000; return x - Math.floor(x); }
+
+/* ---------------- decorative backgrounds ---------------- */
+function Petals({ count = 14, burst = false, color = "#D9A2A6" }) {
+  const petals = useMemo(() => Array.from({ length: count }, (_, i) => {
+    const r1 = seededRandom(i * 12.9898), r2 = seededRandom(i * 78.233), r3 = seededRandom(i * 37.719);
+    return { id:i, left:r1*100, size:8+r2*10, duration:8+r3*10, delay:burst? r1*0.6 : -(r2*12), rotate:r3*360 };
+  }), [count, burst]);
+  return (
+    <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
+      {petals.map(p => (
+        <span key={p.id} className="absolute top-[-5%] rounded-[60%_40%_60%_40%]"
+          style={{ left:`${p.left}%`, width:p.size, height:p.size*0.8,
+            background:`linear-gradient(135deg, ${color}, #F2C2A8)`,
+            animation:`drift ${p.duration}s linear ${p.delay}s infinite`,
+            transform:`rotate(${p.rotate}deg)` }} />
+      ))}
+    </div>
+  );
+}
+function Fireflies({ count = 18 }) {
+  const flies = useMemo(() => Array.from({ length: count }, (_, i) => {
+    const r1 = seededRandom(i*5.123+1), r2 = seededRandom(i*9.771+2), r3 = seededRandom(i*3.331+3);
+    return { id:i, top:10+r1*75, left:r2*100, size:2+r3*3, duration:2+r3*3, delay:r1*4 };
+  }), [count]);
+  return (
+    <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
+      {flies.map(f => (
+        <span key={f.id} className="absolute rounded-full"
+          style={{ top:`${f.top}%`, left:`${f.left}%`, width:f.size, height:f.size, background:"#FFE9B3",
+            boxShadow:"0 0 6px 2px rgba(255,233,179,0.8)", animation:`twinkle ${f.duration}s ease-in-out ${f.delay}s infinite` }} />
+      ))}
+    </div>
+  );
+}
+
+/* ---------------- Screen 1 + PIN pad ---------------- */
+function PinPad({ digits, maxDigits, onDigit, onBack, shake, glow }) {
+  const KEYS = ["1","2","3","4","5","6","7","8","9","","0","back"];
+  return (
+    <div className="w-full max-w-xs mx-auto no-select">
+      <div className={`flex justify-center gap-3 mb-8 ${shake ? "anim-shake" : ""}`}>
+        {Array.from({ length: maxDigits }, (_, i) => {
+          const filled = i < digits.length;
+          return (
+            <span key={i} className="w-3.5 h-3.5 rounded-full border border-[#D9A2A6] transition-all duration-300"
+              style={{ background: filled ? (glow ? "#FFE9B3" : "#D9A2A6") : "transparent",
+                transform: filled ? "scale(1.15)" : "scale(1)",
+                boxShadow: filled && glow ? "0 0 10px 4px rgba(255,233,179,0.9)" : "none" }} />
+          );
+        })}
+      </div>
+      <div className="grid grid-cols-3 gap-4 place-items-center">
+        {KEYS.map((key, idx) => {
+          if (key === "") return <div key={idx} />;
+          if (key === "back") return (
+            <button key={idx} aria-label="Backspace" onClick={onBack} onMouseDown={e=>e.currentTarget.style.transform="scale(.88)"} onMouseUp={e=>e.currentTarget.style.transform="scale(1)"}
+              className="w-16 h-16 rounded-full flex items-center justify-center text-[#4A3B3E]/70 active:bg-[#F4D7D9]/60 transition-transform">⌫</button>
+          );
+          return (
+            <button key={idx} aria-label={`Digit ${key}`} onClick={() => onDigit(key)}
+              onMouseDown={e=>e.currentTarget.style.transform="scale(.88)"} onMouseUp={e=>e.currentTarget.style.transform="scale(1)"}
+              className="w-16 h-16 rounded-full bg-[#FFFBF6] text-[#4A3B3E] text-xl font-display shadow-[0_4px_14px_rgba(180,140,140,0.25)] flex items-center justify-center active:bg-[#F4D7D9]/50 transition-all">
+              {key}
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+function IntroScreen({ onUnlock, frozen }) {
+  const [digits, setDigits] = useState("");
+  const [shake, setShake] = useState(false);
+  const pin = birthdayConfig.pin || "1010";
+
+  const handleDigit = useCallback((d) => {
+    if (frozen) return;
+    setDigits(prev => {
+      if (prev.length >= pin.length) return prev;
+      const next = prev + d;
+      if (next.length === pin.length) {
+        if (next === pin) setTimeout(onUnlock, 250);
+        else { setShake(true); setTimeout(() => { setShake(false); setDigits(""); }, 500); }
+      }
+      return next;
+    });
+  }, [frozen, pin, onUnlock]);
+
+  const handleBack = useCallback(() => { if (!frozen) setDigits(p => p.slice(0,-1)); }, [frozen]);
+
+  return (
+    <div className="scene flex items-center justify-center bg-gradient-to-b from-[#FBF3EA] via-[#F4D7D9]/40 to-[#FBF3EA] relative">
+      <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
+        <svg viewBox="0 0 400 800" className="w-full h-full opacity-70">
+          <defs><radialGradient id="glowIntro" cx="50%" cy="35%" r="60%">
+            <stop offset="0%" stopColor="#FFF6EA" stopOpacity="0.9" /><stop offset="100%" stopColor="#FBF3EA" stopOpacity="0" />
+          </radialGradient></defs>
+          <rect width="400" height="800" fill="url(#glowIntro)" />
+          {[...Array(6)].map((_, i) => (
+            <g key={i} transform={`translate(${30+i*65} ${40+(i%2)*30})`}>
+              <ellipse cx="0" cy="0" rx="16" ry="9" fill="#F2C2A8" opacity="0.55" transform="rotate(20)" />
+              <ellipse cx="10" cy="-4" rx="14" ry="8" fill="#D9A2A6" opacity="0.5" transform="rotate(-15)" />
+            </g>
+          ))}
+          {[...Array(5)].map((_, i) => (
+            <path key={i} d={`M ${20+i*80} 800 C ${10+i*80} 650, ${40+i*80} 500, ${25+i*80} 350`} stroke="#8AA383" strokeWidth="2" fill="none" opacity="0.35" />
+          ))}
+        </svg>
+      </div>
+      <Petals count={12} />
+      <div className="relative z-10 w-full px-6 py-10 flex flex-col items-center text-center anim-fadeup">
+        <p className="font-hand text-[#D9A2A6] text-2xl mb-1">a little something</p>
+        <h1 className="font-display text-4xl sm:text-5xl text-[#4A3B3E] leading-tight mb-3 max-w-sm">{birthdayConfig.introTitle}</h1>
+        <p className="text-[#4A3B3E]/70 text-base mb-1 max-w-xs">{birthdayConfig.introSubtitle}</p>
+        <p className="text-[#4A3B3E]/50 text-sm mb-10 max-w-xs italic">{birthdayConfig.introHint}</p>
+        <PinPad digits={digits} maxDigits={pin.length} onDigit={handleDigit} onBack={handleBack} shake={shake} glow={frozen} />
+      </div>
+    </div>
+  );
+}
+
+/* ---------------- Screen 2 ---------------- */
+function UnlockTransition({ onDone }) {
+  useEffect(() => { const t = setTimeout(onDone, 2200); return () => clearTimeout(t); }, [onDone]);
+  return (
+    <div className="scene flex items-center justify-center bg-[#FBF3EA] relative">
+      <div className="absolute inset-0" style={{ background:"radial-gradient(circle at 50% 45%, #FFF6E6 0%, #FBF3EA 70%)", backdropFilter:"blur(6px)", transition:"backdrop-filter 1.2s" }} />
+      <Petals count={40} burst />
+      <div className="absolute rounded-full anim-pop" style={{ width:500, height:500,
+        background:"radial-gradient(circle, rgba(255,233,179,0.55) 0%, rgba(255,233,179,0) 70%)" }} />
+      <p className="font-hand text-3xl text-[#4A3B3E] relative z-10 anim-fadein">opening the garden...</p>
+    </div>
+  );
+}
+
+/* ---------------- Screen 3 ---------------- */
+function GardenScene({ onContinue }) {
+  const [bloomed, setBloomed] = useState([]);
+  const [message, setMessage] = useState(null);
+  const sceneRef = useRef(null);
+  const positions = [
+    { left: "18%", bottom: "14%", hue: "#D9A2A6" },
+    { left: "48%", bottom: "10%", hue: "#F2C2A8" },
+    { left: "76%", bottom: "16%", hue: "#D9C9E8" },
+  ];
+  const bloomFlower = (i) => {
+    if (bloomed.includes(i)) return;
+    setBloomed(b => [...b, i]);
+    const msgs = birthdayConfig.gardenFlowerMessages;
+    setMessage(msgs[i % msgs.length]);
+    setTimeout(() => setMessage(null), 2200);
+  };
+  const enough = bloomed.length >= Math.min(2, positions.length);
+  return (
+    <div ref={sceneRef} className="scene relative bg-gradient-to-b from-[#D9C9E8]/50 via-[#F4D7D9]/40 to-[#8AA383]/30 overflow-hidden">
+      <div className="absolute inset-x-0 top-10 h-40 opacity-60" aria-hidden="true">
+        <svg viewBox="0 0 400 120" className="w-full h-full">
+          <ellipse cx="80" cy="60" rx="70" ry="24" fill="#FFFDF8" opacity="0.7" />
+          <ellipse cx="260" cy="40" rx="90" ry="20" fill="#FFFDF8" opacity="0.6" />
+        </svg>
+      </div>
+      <div className="absolute inset-x-0 bottom-0 h-1/3" aria-hidden="true">
+        <svg viewBox="0 0 400 200" preserveAspectRatio="none" className="w-full h-full">
+          <path d="M0,120 C100,60 300,60 400,120 L400,200 L0,200 Z" fill="#9CB18E" opacity="0.55" />
+          <path d="M0,160 C120,110 280,110 400,160 L400,200 L0,200 Z" fill="#7C9873" opacity="0.7" />
+        </svg>
+      </div>
+      <Petals count={10} /><Fireflies count={10} />
+      <div className="absolute text-xl anim-float" style={{ left:"25%", top:"22%" }} aria-hidden="true">🦋</div>
+      <div className="absolute text-lg anim-float-slow" style={{ left:"68%", top:"32%" }} aria-hidden="true">🦋</div>
+      <div className="absolute inset-x-0 bottom-0 h-2/5">
+        {positions.map((pos, i) => {
+          const isBloomed = bloomed.includes(i);
+          return (
+            <button key={i} aria-label={isBloomed ? "Bloomed flower" : "Tap to bloom this flower"} onClick={() => bloomFlower(i)}
+              className="absolute -translate-x-1/2" style={{ left: pos.left, bottom: pos.bottom }}>
+              <div className={isBloomed ? "anim-pop" : "anim-float-slow"}>
+                <svg width="52" height="52" viewBox="0 0 52 52">
+                  {[0,60,120,180,240,300].map(deg => (
+                    <ellipse key={deg} cx="26" cy="26" rx={isBloomed?13:6} ry={isBloomed?8:4} fill={pos.hue} opacity={isBloomed?0.9:0.6}
+                      style={{ transformOrigin:"26px 26px", transform:`rotate(${deg}deg) translate(0, -10px)` }} />
+                  ))}
+                  <circle cx="26" cy="26" r={isBloomed?7:4} fill="#FFE9B3" />
+                </svg>
+              </div>
+            </button>
+          );
+        })}
+      </div>
+      <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 flex justify-center px-6 pointer-events-none">
+        {message && <p className="font-hand text-2xl text-[#4A3B3E] bg-[#FFFBF6]/85 px-5 py-2 rounded-full shadow-lg anim-pop">{message}</p>}
+      </div>
+      <div className="absolute top-8 inset-x-0 text-center px-6">
+        <p className="text-[#4A3B3E]/60 text-sm">Tap the flowers to see what they hold ✨</p>
+      </div>
+      {enough && (
+        <div className="absolute bottom-8 inset-x-0 flex justify-center anim-fadeup">
+          <button onClick={onContinue} className="px-6 py-3 rounded-full bg-[#4B5D47] text-[#FFFBF6] font-semibold shadow-lg active:scale-95 transition-transform">Continue →</button>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ---------------- Screen 4 ---------------- */
+function WelcomeCard({ onContinue }) {
+  return (
+    <div className="scene flex items-center justify-center bg-gradient-to-b from-[#F4D7D9]/50 to-[#FBF3EA] relative px-6">
+      <Petals count={8} />
+      <div className="relative z-10 max-w-sm w-full bg-[#FFFBF6]/90 rounded-3xl px-7 py-10 text-center shadow-[0_10px_40px_rgba(180,140,140,0.25)] border border-[#F4D7D9]/50 anim-fadeup">
+        <p className="font-hand text-3xl text-[#D9A2A6] mb-2">Happy Birthday,</p>
+        <h2 className="font-display text-3xl text-[#4A3B3E] mb-6">{birthdayConfig.birthdayName}</h2>
+        <p className="text-[#4A3B3E]/70 mb-4">Today is all about celebrating you.</p>
+        <p className="text-[#4A3B3E]/70 leading-relaxed whitespace-pre-line mb-8">{birthdayConfig.personalMessage}</p>
+        <button onClick={onContinue} className="px-7 py-3 rounded-full bg-[#4B5D47] text-[#FFFBF6] font-semibold shadow-[0_0_20px_rgba(138,163,131,0.5)] active:scale-95 transition-transform">Continue →</button>
+      </div>
+    </div>
+  );
+}
+
+/* ---------------- Screen 5 ---------------- */
+function MemoryGarden({ onContinue }) {
+  const photos = birthdayConfig.photos || [];
+  const [openIndex, setOpenIndex] = useState(null);
+  const touchStart = useRef(null);
+  const close = () => setOpenIndex(null);
+  const next = () => setOpenIndex(i => (i+1) % photos.length);
+  const prev = () => setOpenIndex(i => (i-1+photos.length) % photos.length);
+  const onTouchStart = e => touchStart.current = e.touches[0].clientX;
+  const onTouchEnd = e => {
+    if (touchStart.current == null) return;
+    const dx = e.changedTouches[0].clientX - touchStart.current;
+    if (dx > 50) prev(); else if (dx < -50) next();
+    touchStart.current = null;
+  };
+  return (
+    <div className="scene bg-gradient-to-b from-[#FBF3EA] to-[#D9C9E8]/30 px-6 py-14 relative overflow-y-auto">
+      <h2 className="font-display text-3xl text-[#4A3B3E] text-center mb-1">Our Little Memories</h2>
+      <p className="text-[#4A3B3E]/50 text-center text-sm mb-8">tap a card to look closer</p>
+      <div className="grid grid-cols-2 gap-5 max-w-md mx-auto">
+        {photos.map((p, i) => (
+          <button key={i} onClick={() => setOpenIndex(i)} className="relative rounded-2xl overflow-hidden shadow-[0_8px_24px_rgba(180,140,140,0.25)] bg-[#FFFBF6] active:scale-95 transition-transform"
+            style={{ transform: `rotate(${i%2===0?-2:2}deg)` }}>
+            <div className="aspect-square bg-[#F4D7D9]/40 flex items-center justify-center overflow-hidden">
+              {p.image ? <img src={p.image} alt={p.caption||`Memory ${i+1}`} className="w-full h-full object-cover" loading="lazy" /> : <span className="font-hand text-4xl text-[#D9A2A6]">🌸</span>}
+            </div>
+            <div className="p-2 text-left">
+              <p className="font-hand text-[#D9A2A6] text-sm">Memory {String(i+1).padStart(2,"0")}</p>
+              {p.caption && <p className="text-[#4A3B3E]/60 text-xs truncate">{p.caption}</p>}
+            </div>
+          </button>
+        ))}
+      </div>
+      <div className="flex justify-center mt-10">
+        <button onClick={onContinue} className="px-6 py-3 rounded-full bg-[#4B5D47] text-[#FFFBF6] font-semibold shadow-lg active:scale-95 transition-transform">Continue →</button>
+      </div>
+      {openIndex !== null && (
+        <div className="fixed inset-0 z-50 bg-[#4A3B3E]/70 flex items-center justify-center p-6 anim-fadein" onClick={close} onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
+          <div className="relative max-w-sm w-full bg-[#FFFBF6] rounded-2xl overflow-hidden anim-pop" onClick={e => e.stopPropagation()}>
+            <button aria-label="Close" onClick={close} className="absolute top-3 right-3 z-10 bg-[#4A3B3E]/40 text-white rounded-full p-1.5 w-8 h-8">✕</button>
+            <div className="w-full aspect-square bg-[#F4D7D9]/40 flex items-center justify-center">
+              {photos[openIndex].image ? <img src={photos[openIndex].image} alt={photos[openIndex].caption||""} className="w-full h-full object-cover" /> : <span className="font-hand text-5xl text-[#D9A2A6]">🌸</span>}
+            </div>
+            <div className="p-4 flex items-center justify-between">
+              <button aria-label="Previous" onClick={prev} className="p-2 text-[#4A3B3E]/60">‹</button>
+              <p className="text-[#4A3B3E]/70 text-sm text-center flex-1">{photos[openIndex].caption}</p>
+              <button aria-label="Next" onClick={next} className="p-2 text-[#4A3B3E]/60">›</button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ---------------- Screen 6 ---------------- */
+function InteractiveFlowers({ onContinue }) {
+  const messages = birthdayConfig.flowerMessages || [];
+  const HUES = ["#D9A2A6","#F2C2A8","#D9C9E8","#8AA383"];
+  const [opened, setOpened] = useState([]);
+  const openFlower = i => { if (!opened.includes(i)) setOpened(o => [...o, i]); };
+  const allOpened = opened.length === messages.length && messages.length > 0;
+  return (
+    <div className="scene bg-gradient-to-b from-[#FFFBF6] to-[#F4D7D9]/30 px-6 py-14 flex flex-col items-center">
+      <h2 className="font-display text-3xl text-[#4A3B3E] text-center mb-2">{allOpened ? "You found them all 🌷" : "Tap the flowers..."}</h2>
+      {!allOpened && <p className="text-[#4A3B3E]/50 text-sm mb-8 text-center">each one is holding onto something</p>}
+      <div className="grid grid-cols-2 gap-6 max-w-xs w-full my-6">
+        {messages.map((msg, i) => {
+          const isOpen = opened.includes(i);
+          return (
+            <button key={i} onClick={() => openFlower(i)} className="flex flex-col items-center gap-2">
+              <div className={isOpen ? "anim-pop" : "anim-float-slow"}>
+                <svg width="56" height="56" viewBox="0 0 56 56">
+                  {[0,72,144,216,288].map(deg => (
+                    <ellipse key={deg} cx="28" cy="28" rx={isOpen?14:7} ry={isOpen?9:5} fill={HUES[i%HUES.length]} opacity={isOpen?0.95:0.55}
+                      style={{ transformOrigin:"28px 28px", transform:`rotate(${deg}deg) translate(0,-11px)` }} />
+                  ))}
+                  <circle cx="28" cy="28" r={isOpen?8:5} fill="#FFE9B3" />
+                </svg>
+              </div>
+              {isOpen && <p className="font-hand text-lg text-[#4A3B3E] text-center leading-snug anim-fadein">{msg}</p>}
+            </button>
+          );
+        })}
+      </div>
+      {allOpened && (
+        <div className="flex flex-col items-center mt-4 anim-fadeup">
+          <p className="font-hand text-xl text-[#D9A2A6] mb-4">One final surprise is waiting...</p>
+          <button onClick={onContinue} className="px-6 py-3 rounded-full bg-[#4B5D47] text-[#FFFBF6] font-semibold shadow-lg active:scale-95 transition-transform">Open it</button>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ---------------- Screen 7 ---------------- */
+function LetterScene({ onContinue }) {
+  const [opened, setOpened] = useState(false);
+  const [visibleLines, setVisibleLines] = useState(0);
+  const bodyLines = (birthdayConfig.letterMessage || "").split("\n").filter(Boolean);
+  useEffect(() => {
+    if (!opened || visibleLines >= bodyLines.length + 1) return;
+    const t = setTimeout(() => setVisibleLines(v => v + 1), 700);
+    return () => clearTimeout(t);
+  }, [opened, visibleLines, bodyLines.length]);
+  return (
+    <div className="scene bg-[#FCF6EC] px-6 py-14 flex flex-col items-center justify-center relative overflow-hidden">
+      {["top-4 left-4","top-4 right-4","bottom-4 left-4","bottom-4 right-4"].map(pos => (
+        <span key={pos} className={`absolute ${pos} text-2xl opacity-70`} aria-hidden="true">🌷</span>
+      ))}
+      {!opened ? (
+        <div className="relative z-10 flex flex-col items-center anim-fadein">
+          <div className="w-56 h-40 relative mb-8 anim-float">
+            <div className="absolute inset-0 bg-[#F4D7D9] rounded-lg shadow-lg" />
+            <div className="absolute inset-x-0 top-0 h-1/2 bg-[#D9A2A6] rounded-t-lg" style={{ clipPath:"polygon(0 0, 50% 70%, 100% 0)" }} />
+            <div className="absolute inset-0 flex items-center justify-center text-3xl">💌</div>
+          </div>
+          <button onClick={() => setOpened(true)} className="px-6 py-3 rounded-full bg-[#4B5D47] text-[#FFFBF6] font-semibold shadow-lg active:scale-95 transition-transform">Open Letter</button>
+        </div>
+      ) : (
+        <div className="relative z-10 max-w-sm w-full bg-[#FFFBF6] rounded-lg shadow-2xl px-6 py-8 anim-fadeup">
+          <p className="font-hand text-2xl text-[#4A3B3E] mb-4">Dear {birthdayConfig.birthdayName},</p>
+          <div className="space-y-3">
+            {bodyLines.map((line, i) => (
+              <p key={i} className="text-[#4A3B3E]/75 leading-relaxed text-[15px] transition-opacity duration-500" style={{ opacity: i < visibleLines ? 1 : 0 }}>{line}</p>
+            ))}
+          </div>
+          {visibleLines >= bodyLines.length && (
+            <div className="flex justify-center mt-8 anim-fadein">
+              <button onClick={onContinue} className="px-6 py-3 rounded-full bg-[#4B5D47] text-[#FFFBF6] font-semibold shadow-lg active:scale-95 transition-transform">Continue →</button>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ---------------- Screen 8 ---------------- */
+function PhotoWall({ onContinue }) {
+  const photos = birthdayConfig.photos || [];
+  const [index, setIndex] = useState(0);
+  const [fullscreen, setFullscreen] = useState(false);
+  const touchStart = useRef(null);
+  const next = () => setIndex(i => (i+1) % photos.length);
+  const prev = () => setIndex(i => (i-1+photos.length) % photos.length);
+  const onTouchStart = e => touchStart.current = e.touches[0].clientX;
+  const onTouchEnd = e => {
+    if (touchStart.current == null) return;
+    const dx = e.changedTouches[0].clientX - touchStart.current;
+    if (dx > 50) prev(); else if (dx < -50) next();
+    touchStart.current = null;
+  };
+  const cur = photos[index] || {};
+  return (
+    <div className="scene bg-gradient-to-b from-[#D9C9E8]/30 to-[#FBF3EA] flex flex-col items-center justify-center px-6 py-14 relative overflow-hidden">
+      <Petals count={8} />
+      <h2 className="font-display text-3xl text-[#4A3B3E] mb-8 text-center relative z-10">A Little Photo Wall</h2>
+      <div className="relative z-10 w-full max-w-xs aspect-[4/5]" onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
+        <button key={index} onClick={() => setFullscreen(true)} className="absolute inset-0 rounded-2xl overflow-hidden shadow-2xl bg-[#FFFBF6] anim-fadein">
+          {cur.image ? <img src={cur.image} alt={cur.caption||""} className="w-full h-full object-cover" /> : <div className="w-full h-full flex items-center justify-center text-5xl">🌸</div>}
+          <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-[#4A3B3E]/60 to-transparent p-4">
+            <p className="text-[#FFFBF6] font-hand text-lg">{cur.caption}</p>
+          </div>
+        </button>
+      </div>
+      <div className="flex gap-2 mt-6 relative z-10">
+        {photos.map((_, i) => (
+          <button key={i} aria-label={`Go to photo ${i+1}`} onClick={() => setIndex(i)} className={`w-2 h-2 rounded-full transition-colors ${i===index?"bg-[#4B5D47]":"bg-[#D9A2A6]/40"}`} />
+        ))}
+      </div>
+      <button onClick={onContinue} className="mt-10 px-6 py-3 rounded-full bg-[#4B5D47] text-[#FFFBF6] font-semibold shadow-lg active:scale-95 transition-transform relative z-10">Continue →</button>
+      {fullscreen && (
+        <div className="fixed inset-0 z-50 bg-[#4A3B3E]/90 flex items-center justify-center anim-fadein" onClick={() => setFullscreen(false)} onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
+          <button aria-label="Close" className="absolute top-6 right-6 text-white text-2xl" onClick={() => setFullscreen(false)}>✕</button>
+          {cur.image ? <img src={cur.image} alt={cur.caption||""} className="max-h-[80vh] max-w-[90vw] object-contain rounded-lg" /> : <div className="text-6xl">🌸</div>}
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ---------------- Screen 9 ---------------- */
+function useMusicController(src) {
+  const audioRef = useRef(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [isMuted, setIsMuted] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const [blocked, setBlocked] = useState(false);
+  useEffect(() => {
+    if (!src) return;
+    const audio = new Audio(src);
+    audio.loop = true;
+    audioRef.current = audio;
+    const onTime = () => setProgress(audio.currentTime);
+    const onMeta = () => setDuration(audio.duration || 0);
+    audio.addEventListener("timeupdate", onTime);
+    audio.addEventListener("loadedmetadata", onMeta);
+    return () => { audio.pause(); audio.removeEventListener("timeupdate", onTime); audio.removeEventListener("loadedmetadata", onMeta); };
+  }, [src]);
+  const play = useCallback(async () => {
+    if (!audioRef.current) return;
+    try { await audioRef.current.play(); setIsPlaying(true); setBlocked(false); }
+    catch (e) { setBlocked(true); setIsPlaying(false); }
+  }, []);
+  const pause = useCallback(() => { audioRef.current?.pause(); setIsPlaying(false); }, []);
+  const toggle = useCallback(() => { isPlaying ? pause() : play(); }, [isPlaying, play, pause]);
+  const toggleMute = useCallback(() => { if (!audioRef.current) return; audioRef.current.muted = !audioRef.current.muted; setIsMuted(audioRef.current.muted); }, []);
+  const stop = useCallback(() => { if (!audioRef.current) return; audioRef.current.pause(); audioRef.current.currentTime = 0; setIsPlaying(false); setProgress(0); }, []);
+  return { isPlaying, isMuted, progress, duration, blocked, play, pause, toggle, toggleMute, stop };
+}
+
+function MusicScene({ music, onContinue }) {
+  const hasMusic = Boolean(birthdayConfig.music);
+  const { isPlaying, isMuted, progress, duration, blocked, toggle, toggleMute } = music;
+  const pct = duration > 0 ? Math.min(100, (progress/duration)*100) : 0;
+  return (
+    <div className="scene bg-gradient-to-b from-[#4A3B3E]/5 via-[#F4D7D9]/30 to-[#D9C9E8]/30 flex flex-col items-center justify-center px-6 py-14">
+      <p className="font-hand text-2xl text-[#D9A2A6] mb-8">A little song for you...</p>
+      <div className="relative w-56 h-56 mb-8">
+        <div className={`absolute inset-0 rounded-full border-4 border-dashed border-[#D9A2A6]/50 ${isPlaying ? "anim-spin-slow" : ""}`} />
+        <div className="absolute inset-4 rounded-full bg-[#FFFBF6] shadow-inner flex items-center justify-center overflow-hidden">
+          <span className={`text-5xl ${isPlaying ? "anim-spin-med" : ""}`}>🌼</span>
+        </div>
+        <div className="absolute -bottom-6 inset-x-0 flex justify-center gap-1.5">
+          {[0,1,2,3,4].map(i => (
+            <span key={i} className="w-1.5 rounded-full bg-[#8AA383]" style={{ height: isPlaying ? 18 : 6, transition:"height .4s", animation: isPlaying ? `ringPulse ${1+i*0.15}s ease-in-out infinite` : "none" }} />
+          ))}
+        </div>
+      </div>
+      {hasMusic ? (
+        <>
+          <div className="flex items-center gap-5 mb-4">
+            <button onClick={toggle} aria-label={isPlaying?"Pause":"Play"} className="w-14 h-14 rounded-full bg-[#4B5D47] text-[#FFFBF6] flex items-center justify-center shadow-lg active:scale-90 transition-transform text-xl">
+              {isPlaying ? "⏸" : "▶"}
+            </button>
+            <button onClick={toggleMute} aria-label={isMuted?"Unmute":"Mute"} className="w-11 h-11 rounded-full bg-[#FFFBF6] text-[#4A3B3E]/70 flex items-center justify-center shadow">
+              {isMuted ? "🔇" : "🔊"}
+            </button>
+          </div>
+          <div className="w-full max-w-xs h-1.5 bg-[#F4D7D9]/50 rounded-full overflow-hidden mb-2">
+            <div className="h-full bg-[#D9A2A6] transition-all" style={{ width: `${pct}%` }} />
+          </div>
+          {blocked && <p className="text-[#4A3B3E]/40 text-xs text-center mb-2">Tap play — your browser needs a tap before it can play sound.</p>}
+        </>
+      ) : (
+        <p className="text-[#4A3B3E]/50 text-sm mb-4 text-center max-w-xs">(Add a song URL to <code>birthdayConfig.music</code> to play something here.)</p>
+      )}
+      <button onClick={onContinue} className="mt-8 px-6 py-3 rounded-full bg-[#4B5D47] text-[#FFFBF6] font-semibold shadow-lg active:scale-95 transition-transform">Continue →</button>
+    </div>
+  );
+}
+
+/* ---------------- Screen 10 ---------------- */
+function FinalGarden({ onContinue }) {
+  const [revealed, setRevealed] = useState(false);
+  useEffect(() => { const t = setTimeout(() => setRevealed(true), 2600); return () => clearTimeout(t); }, []);
+  return (
+    <div className="scene relative overflow-hidden bg-gradient-to-b from-[#2E2A45] via-[#4B4066] to-[#7C6B8A] flex items-center justify-center px-6">
+      <div className="absolute top-10 right-10 w-14 h-14 rounded-full bg-[#FFF6DE]" style={{ boxShadow:"0 0 40px 18px rgba(255,246,222,0.35)" }} />
+      <div className="absolute inset-0" aria-hidden="true">
+        {[...Array(24)].map((_, i) => (
+          <span key={i} className="absolute rounded-full bg-white anim-twinkle" style={{ width:2+(i%3), height:2+(i%3), top:`${(i*37)%70}%`, left:`${(i*53)%100}%`, animationDelay:`${i*0.2}s` }} />
+        ))}
+      </div>
+      <div className="absolute bottom-0 inset-x-0 h-1/2 bg-gradient-to-t from-[#7C6B8A]/60 to-transparent" />
+      <Fireflies count={16} /><Petals count={10} color="#F2C2A8" />
+      <div className="absolute bottom-0 inset-x-0 flex justify-around px-6 pb-4">
+        {[0,1,2,3].map(i => <div key={i} className="text-2xl anim-twinkle" style={{ filter:"drop-shadow(0 0 6px rgba(255,233,179,0.8))", animationDelay:`${i*0.3}s` }}>🌸</div>)}
+      </div>
+      <div className="relative z-10 text-center max-w-sm">
+        {!revealed ? (
+          <p className="font-hand text-2xl text-[#FFFBF6]/90 anim-fadein">There's just one more thing...</p>
+        ) : (
+          <div className="anim-fadeup">
+            <h2 className="font-display text-3xl text-[#FFFBF6] mb-4">Happy Birthday, {birthdayConfig.birthdayName} ❤️</h2>
+            <p className="text-[#FFFBF6]/80 leading-relaxed mb-8">{birthdayConfig.finalMessage}</p>
+            <button onClick={onContinue} className="px-6 py-3 rounded-full bg-[#FFFBF6] text-[#4A3B3E] font-semibold shadow-lg active:scale-95 transition-transform">Continue →</button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+/* ---------------- Screen 11 ---------------- */
+function FinalSurprise({ onReplay }) {
+  const RING = [0,45,90,135,180,225,270,315];
+  return (
+    <div className="scene relative overflow-hidden bg-gradient-to-b from-[#F4D7D9]/60 via-[#F2C2A8]/40 to-[#FBF3EA] flex items-center justify-center px-6">
+      <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
+        {[...Array(16)].map((_, i) => (
+          <span key={i} className="absolute bottom-0 rounded-full" style={{ left:`${(i*61)%100}%`, width:4+(i%3)*2, height:4+(i%3)*2,
+            background: i%2 ? "#F2C2A8" : "#D9C9E8", animation:`riseUp ${6+(i%5)}s ease-out ${i*0.4}s infinite` }} />
+        ))}
+      </div>
+      <div className="absolute inset-0 flex items-center justify-center">
+        {RING.map((deg, i) => (
+          <span key={deg} className="absolute text-2xl anim-pop" style={{ animationDelay:`${0.15*i}s`, transform:`rotate(${deg}deg) translate(120px) rotate(-${deg}deg)` }}>🌸</span>
+        ))}
+      </div>
+      <div className="relative z-10 text-center max-w-sm">
+        <div className="text-6xl mb-6 anim-pop">💛</div>
+        <p className="font-hand text-xl text-[#4A3B3E]/70 mb-2 anim-fadein" style={{ animationDelay:"0.8s", opacity:0, animationFillMode:"forwards" }}>Made with love by {birthdayConfig.senderName}</p>
+        <h2 className="font-display text-4xl text-[#4A3B3E] mb-10 anim-fadeup" style={{ animationDelay:"1.1s", opacity:0, animationFillMode:"forwards" }}>Happy Birthday ❤️</h2>
+        <button onClick={onReplay} className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#FFFBF6] text-[#4A3B3E]/70 text-sm font-medium shadow active:scale-95 transition-transform anim-fadein" style={{ animationDelay:"1.5s", opacity:0, animationFillMode:"forwards" }}>
+          ↺ Replay
+        </button>
+      </div>
+    </div>
+  );
+}
+
+/* ---------------- App ---------------- */
+const SCREENS = ["intro","unlock","garden","welcome","memories","flowers","letter","photowall","music","finalgarden","surprise"];
+
+function App() {
+  const [screenIndex, setScreenIndex] = useState(0);
+  const [isUnlocked, setIsUnlocked] = useState(false);
+  const [freezeKeypad, setFreezeKeypad] = useState(false);
+  const [resetKey, setResetKey] = useState(0);
+  const music = useMusicController(birthdayConfig.music);
+
+  const advance = useCallback(() => setScreenIndex(i => Math.min(i+1, SCREENS.length-1)), []);
+  const handleUnlock = useCallback(() => {
+    setFreezeKeypad(true); setIsUnlocked(true);
+    setTimeout(advance, 300);
+  }, [advance]);
+  const handleReplay = useCallback(() => {
+    music.stop(); setIsUnlocked(false); setFreezeKeypad(false); setScreenIndex(0); setResetKey(k => k+1);
+  }, [music]);
+
+  const current = SCREENS[screenIndex];
+  const screenMap = {
+    intro: <IntroScreen key={`intro-${resetKey}`} onUnlock={handleUnlock} frozen={freezeKeypad && isUnlocked} />,
+    unlock: <UnlockTransition key={`unlock-${resetKey}`} onDone={advance} />,
+    garden: <GardenScene key={`garden-${resetKey}`} onContinue={advance} />,
+    welcome: <WelcomeCard key={`welcome-${resetKey}`} onContinue={advance} />,
+    memories: <MemoryGarden key={`memories-${resetKey}`} onContinue={advance} />,
+    flowers: <InteractiveFlowers key={`flowers-${resetKey}`} onContinue={advance} />,
+    letter: <LetterScene key={`letter-${resetKey}`} onContinue={advance} />,
+    photowall: <PhotoWall key={`photowall-${resetKey}`} onContinue={advance} />,
+    music: <MusicScene key={`music-${resetKey}`} music={music} onContinue={advance} />,
+    finalgarden: <FinalGarden key={`finalgarden-${resetKey}`} onContinue={advance} />,
+    surprise: <FinalSurprise key={`surprise-${resetKey}`} onReplay={handleReplay} />,
+  };
+
+  return <div className="w-full min-h-[100dvh] bg-[#FBF3EA]" key={`${current}-${resetKey}`}>{screenMap[current]}</div>;
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+
+  </script>
+
+  <script>
+  (function(){
+    var part1 = document.getElementById('part1');
+    var part2 = document.getElementById('part2');
+    var btn   = document.getElementById('continueBtn');
+
+    window.addEventListener('birthdayFilmDone', function(){
+      btn.classList.add('is-shown');
+    });
+
+    btn.addEventListener('click', function(){
+      btn.classList.remove('is-shown');
+      part1.style.transition = 'opacity .9s ease';
+      part1.style.opacity = '0';
+      setTimeout(function(){
+        part1.style.display = 'none';
+        part2.style.display = 'block';
+        part2.style.opacity = '0';
+        part2.style.transition = 'opacity .9s ease';
+        requestAnimationFrame(function(){ part2.style.opacity = '1'; });
+      }, 900);
+    });
+  })();
+  </script>
+</body>
+</html>
