@@ -820,7 +820,7 @@ function MusicScene({ music, onContinue }) {
           {blocked && <p className="text-[#4A3B3E]/40 text-xs text-center mb-2">Tap play — your browser needs a tap before it can play sound.</p>}
         </>
       ) : (
-        <p className="text-[#4A3B3E]/50 text-sm mb-4 text-center max-w-xs">(Always Be Happyyy <code>Mere Kuchuu Puchuuu</code> 😋🫶🏻)</p>
+        <p className="text-[#4A3B3E]/50 text-sm mb-4 text-center max-w-xs">(Always Be Happyyy  <code>Mere Kuchuu Puchuuu</code> 😋🫶🏻)</p>
       )}
       <button onClick={onContinue} className="mt-8 px-6 py-3 rounded-full bg-[#4B5D47] text-[#FFFBF6] font-semibold shadow-lg active:scale-95 transition-transform">Continue →</button>
     </div>
@@ -849,7 +849,7 @@ function FinalGarden({ onContinue }) {
           <p className="font-hand text-2xl text-[#FFFBF6]/90 anim-fadein">There's just one more thing...</p>
         ) : (
           <div className="anim-fadeup">
-            <h2 className="font-display text-3xl text-[#FFFBF6] mb-4">Happy Birthday, {birthdayConfig.birthdayName} ❤️</h2>
+            <h2 className="font-display text-3xl text-[#FFFBF6] mb-4">Happy Birthday, {birthdayConfig.birthdayName} 💗</h2>
             <p className="text-[#FFFBF6]/80 leading-relaxed mb-8">{birthdayConfig.finalMessage}</p>
             <button onClick={onContinue} className="px-6 py-3 rounded-full bg-[#FFFBF6] text-[#4A3B3E] font-semibold shadow-lg active:scale-95 transition-transform">Continue →</button>
           </div>
@@ -876,9 +876,9 @@ function FinalSurprise({ onReplay }) {
         ))}
       </div>
       <div className="relative z-10 text-center max-w-sm">
-        <div className="text-6xl mb-6 anim-pop">💛</div>
-        <p className="font-hand text-xl text-[#4A3B3E]/70 mb-2 anim-fadein" style={{ animationDelay:"0.8s", opacity:0, animationFillMode:"forwards" }}>Made with love by {birthdayConfig.senderName}</p>
-        <h2 className="font-display text-4xl text-[#4A3B3E] mb-10 anim-fadeup" style={{ animationDelay:"1.1s", opacity:0, animationFillMode:"forwards" }}>Happy Birthday ❤️</h2>
+        <div className="text-6xl mb-6 anim-pop">🎀</div>
+        <p className="font-hand text-xl text-[#4A3B3E]/70 mb-2 anim-fadein" style={{ animationDelay:"0.8s", opacity:0, animationFillMode:"forwards" }}>Made with love {birthdayConfig.senderName}</p>
+        <h2 className="font-display text-4xl text-[#4A3B3E] mb-10 anim-fadeup" style={{ animationDelay:"1.1s", opacity:0, animationFillMode:"forwards" }}>Happiesttt Birthday 😘🌷</h2>
         <button onClick={onReplay} className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#FFFBF6] text-[#4A3B3E]/70 text-sm font-medium shadow active:scale-95 transition-transform anim-fadein" style={{ animationDelay:"1.5s", opacity:0, animationFillMode:"forwards" }}>
           ↺ Replay
         </button>
