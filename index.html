@@ -792,7 +792,7 @@ function MusicScene({ music, onContinue }) {
   const pct = duration > 0 ? Math.min(100, (progress/duration)*100) : 0;
   return (
     <div className="scene bg-gradient-to-b from-[#4A3B3E]/5 via-[#F4D7D9]/30 to-[#D9C9E8]/30 flex flex-col items-center justify-center px-6 py-14">
-      <p className="font-hand text-2xl text-[#D9A2A6] mb-8">A little song for you...</p>
+      <p className="font-hand text-2xl text-[#D9A2A6] mb-8">Just a little reminder...</p>
       <div className="relative w-56 h-56 mb-8">
         <div className={`absolute inset-0 rounded-full border-4 border-dashed border-[#D9A2A6]/50 ${isPlaying ? "anim-spin-slow" : ""}`} />
         <div className="absolute inset-4 rounded-full bg-[#FFFBF6] shadow-inner flex items-center justify-center overflow-hidden">
@@ -820,7 +820,7 @@ function MusicScene({ music, onContinue }) {
           {blocked && <p className="text-[#4A3B3E]/40 text-xs text-center mb-2">Tap play — your browser needs a tap before it can play sound.</p>}
         </>
       ) : (
-        <p className="text-[#4A3B3E]/50 text-sm mb-4 text-center max-w-xs">(Stay Happy Always <code>Mere Kuchuu Puchuuu</code> 😋🫶🏻)</p>
+        <p className="text-[#4A3B3E]/50 text-sm mb-4 text-center max-w-xs">(Always Be Happyyy <code>Mere Kuchuu Puchuuu</code> 😋🫶🏻)</p>
       )}
       <button onClick={onContinue} className="mt-8 px-6 py-3 rounded-full bg-[#4B5D47] text-[#FFFBF6] font-semibold shadow-lg active:scale-95 transition-transform">Continue →</button>
     </div>
